@@ -1,4 +1,4 @@
-# Technion EE 046211 - DL project
+# DL project - Traffic sign recognition
 
 <h1 align="center">
   <br>
@@ -11,7 +11,7 @@ Traffic sign recognition
     <a> Kfir Levi </a> 
   </p>
 
-- [Technion EE 046211 - DL project](technion-ee-046211---dl-project)
+- [DL project - Traffic sign recognition](#dl-project---traffic-sign-recognition)
   * [Agenda](#agenda)
   * [Running The Code](#running-the-code)
   * [The GTSRB dataset](#the-gtsrb-dataset)
