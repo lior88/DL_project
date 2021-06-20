@@ -11,8 +11,7 @@ Traffic sign recognition
     <a> Kfir Levi </a> 
   </p>
 
-- [Technion EE 046211 - DL project](#technion-ee-046211---dl-project)
-  * [Traffic sign recognition](trafic-sign-recognition)
+- [Technion EE 046211 - DL project](technion-ee-046211---dl-project)
   * [Agenda](#agenda)
   * [Running The Code](#running-the-code)
   * [The GTSRB dataset](#the-gtsrb-dataset)
