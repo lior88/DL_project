@@ -42,8 +42,8 @@ In order to run the code, use the main.py file, it requires 3 parameters:
 ## The GTSRB dataset
 we used the GTSRB dataset, which consists of german traffic signs with 43 different classes and more than 39,000 samples of 30x30 RGB images.
 in order to run the code, you need to download the dataset from one of the following sources:
-  * 'https://www.kaggle.com/meowmeowmeowmeowmeow/gtsrb-german-traffic-sign'
-  * 'https://benchmark.ini.rub.de/gtsrb_dataset.html'
+  * https://www.kaggle.com/meowmeowmeowmeowmeow/gtsrb-german-traffic-sign
+  * https://benchmark.ini.rub.de/gtsrb_dataset.html
 
 
 ## References
