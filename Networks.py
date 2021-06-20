@@ -34,7 +34,7 @@ class Original_Classifier(torch.nn.Module):
             nn.ReLU(inplace=True),
             nn.Dropout(p=0.5),
             nn.Linear(256, 43),
-            nn.Softmax(dim=1)
+            #nn.Softmax(dim=1)
         )
 
 

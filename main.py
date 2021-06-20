@@ -40,24 +40,42 @@ def model_choice(classifier, num_classes):
         model = Original_Classifier()
         save_string = "original_classifier_ckpt"
         input_size = 30
+        epochs = 15
     elif opts.Classifier == "CifarCNN":
         model = CifarCNN()
         save_string = "cifar_cnn_ckpt"
         input_size = 30
+        epochs = 15
     elif opts.Classifier == "resnet18":
         model = models.resnet18(pretrained=True)
         num_ftrs = model.fc.in_features
         model.fc = nn.Linear(num_ftrs, num_classes)  # replace the last FC layer
         input_size = 224
         save_string = "resnet_18_ckpt"
+        epochs = 5
     elif opts.Classifier == "vgg16":
         model = models.vgg16(pretrained=True)
-        num_ftrs = model.fc.in_features
-        model.fc = nn.Linear(num_ftrs, num_classes)  # replace the last FC layer
+        num_ftrs = model.classifier[6].in_features
+        model.classifier[6] = nn.Linear(num_ftrs, num_classes)  # replace the last FC layer
         input_size = 224
         save_string = "vgg_16_ckpt"
+        epochs = 5
+    elif opts.Classifier == "alexnet":
+        model = models.alexnet(pretrained=True)
+        num_ftrs = model.classifier[6].in_features
+        model.classifier[6] = nn.Linear(num_ftrs, num_classes)  # replace the last FC layer
+        input_size = 224
+        save_string = "alexnet_ckpt"
+        epochs = 5
+    elif opts.Classifier == "densenet":
+        model = models.densenet121(pretrained=True)
+        num_ftrs = model.classifier.in_features
+        model.classifier = nn.Linear(num_ftrs, num_classes)  # replace the last FC layer
+        input_size = 224
+        save_string = "densenet_ckpt"
+        epochs = 5
 
-    return model, save_string, input_size
+    return model, save_string, input_size, epochs
 
 
 num_classes = 43
@@ -68,7 +86,7 @@ print("device: ", device)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--TrainTest', type=str, default="Test", help="Train or Test")
-parser.add_argument('--Classifier', type=str, default="Original", help="Original, CifarCNN, resnet18, vgg16")
+parser.add_argument('--Classifier', type=str, default="Original", help="Original, CifarCNN, resnet18, vgg16, densenet")
 parser.add_argument('--root', type=str, help="directory of data folders")
 opts = parser.parse_args()
 
@@ -76,7 +94,7 @@ mode = opts.TrainTest
 root_train = opts.root + "\Train"
 root_test = opts.root + "\Test"
 
-model, save_string, input_size = model_choice(opts.Classifier, num_classes)
+model, save_string, input_size, epochs = model_choice(opts.Classifier, num_classes)
 model = model.to(device)
 
 mode = opts.TrainTest
@@ -106,7 +124,7 @@ test_loader = val_loader
 if mode == "Train":
 
     learning_rate = 1e-3
-    epochs = 1
+    #epochs = 15
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
@@ -165,22 +183,6 @@ if mode == "Train":
     test_accuracy, confusion_matrix = calculate_accuracy(model, test_loader, device)
     print("test accuracy: {:.3f}%".format(test_accuracy))
 
-    fig, ax = plt.subplots(1, 1, figsize=(8, 6))
-    ax.matshow(confusion_matrix, aspect='auto', vmin=0, vmax=1000, cmap=plt.get_cmap('Blues'))
-    plt.ylabel('Actual Category')
-    classes = ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-               '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-               '20', '21', '22', '23', '24', '25', '26', '27', '28', '29',
-               '30', '31', '32', '33', '34', '35', '36', '37', '38', '39',
-               '40', '41', '42',)
-    plt.yticks(range(43), classes)
-    plt.xlabel('Predicted Category')
-    plt.xticks(range(43), classes)
-
-    fig, ax = plt.subplots(1, 1, figsize=(8, 6))
-    ax.plot(range(epochs), loss_memory)
-
-    plt.show()
 
 elif mode == "Test":
     state = torch.load("./our_checkpoints/" + save_string + ".pth", map_location=device)
