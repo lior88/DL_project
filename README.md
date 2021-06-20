@@ -36,6 +36,9 @@ In order to run the code, use the main.py file, it requires 3 parameters:
   + vgg16 - the pretrained vgg16 network.
 * root - the location of the data folders.
 
+#### run example:
+    python main.py --TrainTest "Train" --Classifier "Original" --root "C:\Users\liorb\OneDrive - Technion\Documents\Deep Learning - 046211\project"
+
 ## The GTSRB dataset
 we used the GTSRB dataset, which consists of german traffic signs with 43 different classes and more than 39,000 samples of 30x30 RGB images.
 in order to run the code, you need to download the dataset from one of the following sources:
