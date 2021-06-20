@@ -1,17 +1,18 @@
-# DL project - Traffic sign recognition
+# Technion EE 046211 - DL project
+
 <h1 align="center">
   <br>
-Technion EE 046211 - Deep Learning
+Traffic sign recognition
   <br>
-  <img src="https://raw.githubusercontent.com/taldatech/ee046211-deep-learning/main/assets/nn_gumgum.gif" height="200">
+  <img src="https://github.com/lior88/DL_project/blob/SeparateMainAndNets/source/pic.png" height="200">
 </h1>
   <p align="center">
     <a href="https://github.com/lior88">Li-or Bar David </a> •
-    <a> Kfir Levi </a> •
+    <a> Kfir Levi </a> 
   </p>
 
-
-- [DL project - Traffic sign recognition](#dl-project---traffic-sign-recognition)
+- [Technion EE 046211 - DL project](#technion-ee-046211---dl-project)
+  * [Traffic sign recognition](trafic-sign-recognition)
   * [Agenda](#agenda)
   * [Running The Code](#running-the-code)
   * [The GTSRB dataset](#the-gtsrb-dataset)
