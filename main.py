@@ -90,16 +90,13 @@ parser.add_argument('--Classifier', type=str, default="Original", help="Original
 parser.add_argument('--root', type=str, help="directory of data folders")
 opts = parser.parse_args()
 
-mode = opts.TrainTest
-root_train = opts.root + "\Train"
-root_test = opts.root + "\Test"
 
 model, save_string, input_size, epochs = model_choice(opts.Classifier, num_classes)
 model = model.to(device)
 
 mode = opts.TrainTest
-root_train = opts.root + "\Train"
-root_test = opts.root + "\Test"
+root_train = opts.root + "/Train"
+root_test = opts.root + "/Test_Arranged"
 
 print(root_train)
 
@@ -111,20 +108,20 @@ transform = transforms.Compose(
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])
 
-# data = torchvision.datasets.DatasetFolder(root=root_train, loader=Image.open, extensions='.png', transform=transform)
+
 data = torchvision.datasets.ImageFolder(root=root_train, transform=transform)
+data_test = torchvision.datasets.ImageFolder(root=root_test, transform=transform)
 
 train_size = int(0.8 * len(data))
 val_size = len(data) - train_size
 data_train, data_val = torch.utils.data.random_split(data, [train_size, val_size])
 train_loader = torch.utils.data.DataLoader(data_train, batch_size=batch_size, shuffle=True)
 val_loader = torch.utils.data.DataLoader(data_val, batch_size=batch_size, shuffle=True)
-test_loader = val_loader
+test_loader = torch.utils.data.DataLoader(data_test, batch_size=batch_size, shuffle=True)
 
 if mode == "Train":
 
     learning_rate = 1e-3
-    #epochs = 15
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
