@@ -187,3 +187,4 @@ elif mode == "Test":
 
     test_accuracy, confusion_matrix = calculate_accuracy(model, test_loader, device)
     print("test accuracy: {:.3f}%".format(test_accuracy))
+
