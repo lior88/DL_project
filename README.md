@@ -8,7 +8,7 @@ Traffic sign recognition
 </h1>
   <p align="center">
     <a href="https://github.com/lior88">Li-or Bar David </a> •
-    <a> Kfir Levi </a> 
+    <a href="https://github.com/kfirlevi"> Kfir Levi </a> 
   </p>
 
 - [DL project - Traffic sign recognition](#dl-project---traffic-sign-recognition)
