@@ -4,7 +4,7 @@
   <br>
 Traffic sign recognition
   <br>
-  <img src="https://github.com/lior88/DL_project/blob/SeparateMainAndNets/source/pic.png" height="200">
+  <img src="https://github.com/lior88/DL_project/blob/main/source/pic.png" height="200">
 </h1>
   <p align="center">
     <a href="https://github.com/lior88">Li-or Bar David </a> •
