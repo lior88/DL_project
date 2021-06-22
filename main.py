@@ -86,7 +86,7 @@ print("device: ", device)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--TrainTest', type=str, default="Test", help="Train or Test")
-parser.add_argument('--Classifier', type=str, default="Original", help="Original, CifarCNN, resnet18, vgg16, densenet")
+parser.add_argument('--Classifier', type=str, default="Original", help="Original, CifarCNN, resnet18, vgg16, densenet, alexnet")
 parser.add_argument('--root', type=str, help="directory of data folders")
 opts = parser.parse_args()
 
@@ -98,7 +98,6 @@ mode = opts.TrainTest
 root_train = opts.root + "/Train"
 root_test = opts.root + "/Test_Arranged"
 
-print(root_train)
 
 batch_size = 32
 transform = transforms.Compose(
