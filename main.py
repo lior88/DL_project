@@ -1,4 +1,5 @@
 import numpy as np
+import numpy.matlib
 import pandas as pd
 import matplotlib.pyplot as plt
 from PIL import Image
@@ -12,6 +13,50 @@ import time
 import argparse
 
 from Networks import CifarCNN, Original_Classifier
+
+class_names = ( 'Speed limit (20km/h)',
+                'Speed limit (30km/h)',      
+                'Speed limit (50km/h)',       
+                'Speed limit (60km/h)',      
+                'Speed limit (70km/h)',    
+                'Speed limit (80km/h)',      
+                'End of speed limit (80km/h)',     
+                'Speed limit (100km/h)',    
+                'Speed limit (120km/h)',     
+                'No passing',   
+                'No passing veh over 3.5 tons',     
+                'Right-of-way at intersection',     
+                'Priority road',    
+                'Yield',     
+                'Stop',       
+                'No vehicles',       
+                'Veh > 3.5 tons prohibited',       
+                'No entry',       
+                'General caution',     
+                'Dangerous curve left',      
+                'Dangerous curve right',   
+                'Double curve',      
+                'Bumpy road',     
+                'Slippery road',       
+                'Road narrows on the right',  
+                'Road work',    
+                'Traffic signals',      
+                'Pedestrians',     
+                'Children crossing',     
+                'Bicycles crossing',       
+                'Beware of ice/snow',
+                'Wild animals crossing',      
+                'End speed + passing limits',      
+                'Turn right ahead',     
+                'Turn left ahead',       
+                'Ahead only',      
+                'Go straight or right',      
+                'Go straight or left',      
+                'Keep right',     
+                'Keep left',      
+                'Roundabout mandatory',     
+                'End of no passing',      
+                'End no passing veh > 3.5 tons')
 
 
 def calculate_accuracy(model, dataloader, device):
@@ -179,11 +224,68 @@ if mode == "Train":
     test_accuracy, confusion_matrix = calculate_accuracy(model, test_loader, device)
     print("test accuracy: {:.3f}%".format(test_accuracy))
 
+    #%% plot the confusion matrix
+    fig, ax = plt.subplots(1,1,figsize=(14,10))
+    label_num = np.sum(confusion_matrix, axis=1)
+    rep_label = numpy.matlib.repmat(label_num, len(class_names),1)
+    Normalized_mat = np.round(confusion_matrix/rep_label, 2)
+    # ax.matshow(confusion_matrix, aspect='auto', vmin=0, vmax=500, cmap=plt.get_cmap('GnBu'))
+    ax.matshow(Normalized_mat, aspect='auto', vmin=0, vmax=2, cmap=plt.get_cmap('GnBu'))
+    
 
+    ax.set_yticks(np.arange(len(class_names)))
+    ax.set_xticks(np.arange(len(class_names)))
+    ax.set_xticklabels(class_names)
+    ax.set_yticklabels(class_names)
+    plt.xlabel('Predicted Category')
+    plt.ylabel('Actual Category')
+    plt.setp(ax.get_xticklabels(), rotation=-30, ha="right",
+             rotation_mode="anchor")
+
+    # Loop over data dimensions and create text annotations.
+    for i in range(len(class_names)):
+        for j in range(len(class_names)):
+            if round(confusion_matrix[i, j]/label_num[i], 2) != 0:
+            #if confusion_matrix[i, j] != 0:
+                text = ax.text(j, i, round(confusion_matrix[i, j]/label_num[i], 2),
+                #text = ax.text(j, i, confusion_matrix[i, j],
+                               ha="center", va="center", color="k")
+    fig.tight_layout()
+    plt.show()
+    
 elif mode == "Test":
     state = torch.load("./our_checkpoints/" + save_string + ".pth", map_location=device)
     model.load_state_dict(state['net'])
 
     test_accuracy, confusion_matrix = calculate_accuracy(model, test_loader, device)
     print("test accuracy: {:.3f}%".format(test_accuracy))
+    
+    #%% plot the confusion matrix
+    fig, ax = plt.subplots(1,1,figsize=(14,10))
+    label_num = np.sum(confusion_matrix, axis=1)
+    rep_label = numpy.matlib.repmat(label_num, len(class_names),1)
+    Normalized_mat = np.round(confusion_matrix/rep_label, 2)
+    # ax.matshow(confusion_matrix, aspect='auto', vmin=0, vmax=500, cmap=plt.get_cmap('GnBu'))
+    ax.matshow(Normalized_mat, aspect='auto', vmin=0, vmax=2, cmap=plt.get_cmap('GnBu'))
+    
+
+    ax.set_yticks(np.arange(len(class_names)))
+    ax.set_xticks(np.arange(len(class_names)))
+    ax.set_xticklabels(class_names)
+    ax.set_yticklabels(class_names)
+    plt.xlabel('Predicted Category')
+    plt.ylabel('Actual Category')
+    plt.setp(ax.get_xticklabels(), rotation=-30, ha="right",
+             rotation_mode="anchor")
+
+    # Loop over data dimensions and create text annotations.
+    for i in range(len(class_names)):
+        for j in range(len(class_names)):
+            if round(confusion_matrix[i, j]/label_num[i], 2) != 0:
+            #if confusion_matrix[i, j] != 0:
+                text = ax.text(j, i, round(confusion_matrix[i, j]/label_num[i], 2),
+                #text = ax.text(j, i, confusion_matrix[i, j],
+                               ha="center", va="center", color="k")
+    fig.tight_layout()
+    plt.show()
 
