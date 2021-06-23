@@ -30,7 +30,7 @@ class Original_Classifier(torch.nn.Module):
 
 
         self.fc_layer = nn.Sequential(
-            nn.Linear(1024, 256),
+            nn.Linear(576, 256),
             nn.ReLU(inplace=True),
             nn.Dropout(p=0.5),
             nn.Linear(256, 43),
