@@ -37,16 +37,18 @@ before you use the main file, it is needed to arrange the test dataset in a spec
     python making_test_dataset.py --root "C:\Users\liorb\OneDrive - Technion\Documents\Deep Learning - 046211\project"
 
 ### training and testing
-In order to run the code, use the main.py file, it requires 3 parameters:
+In order to run the code, use the main.py file, it requires 4 parameters:
 * TrainTest - receives string "Test" or "Train". use it to choose whether to train a model or test it.
 * Classifier - receives a string which specifies the wanted Classifier. options are: 
   + Original - the original network used for the project.
   + CifarCNN - the Cifar_CNN network we saw in class.
   + resnet18 - the pretrained resnet18 network.
   + vgg16 - the pretrained vgg16 network.
+  + densenet - the pretrained densenet network.
+* Augnemtation - receives a string which specifies whether to use augmentation in the training or not.
 * root - the location of the data folders.
 #### run example:
-    python main.py --TrainTest "Train" --Classifier "Original" --root "C:\Users\liorb\OneDrive - Technion\Documents\Deep Learning - 046211\project"
+    python main.py --TrainTest "Train" --Classifier "Original" --Augmentation "No" --root "C:\Users\liorb\OneDrive - Technion\Documents\Deep Learning - 046211\project"
 
 ## The GTSRB dataset
 we used the GTSRB dataset, which consists of german traffic signs with 43 different classes and more than 39,000 samples of 30x30 RGB images.
