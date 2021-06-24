@@ -286,7 +286,7 @@ elif mode == "Test":
     model.load_state_dict(state['net'])
 
     test_accuracy, confusion_matrix = calculate_accuracy(model, test_loader, device)
-    print("test accuracy: {:.3f}%".format(test_accuracy))
+    print("test accuracy for model {} is: {:.3f}%".format(opts.Classifier, test_accuracy))
 
     #%% plot the confusion matrix
     fig, ax = plt.subplots(1,1,figsize=(14,10))
