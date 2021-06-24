@@ -82,48 +82,44 @@ def calculate_accuracy(model, dataloader, device):
 
 def model_choice(classifier, num_classes):
     if classifier == "Original":
-        model = Original_Classifier()
-        save_string = "original_classifier_ckpt"
+        model_ = Original_Classifier()
+        save_string = "original_classifier"
         input_size = 30
         epochs = 15
-    elif opts.Classifier == "CifarCNN":
-        model = CifarCNN()
-        save_string = "cifar_cnn_ckpt"
+    elif classifier == "CifarCNN":
+        model_ = CifarCNN()
+        save_string = "cifar_cnn"
         input_size = 30
         epochs = 15
-    elif opts.Classifier == "resnet18":
-        model = models.resnet18(pretrained=True)
-        num_ftrs = model.fc.in_features
-        model.fc = nn.Linear(num_ftrs, num_classes)  # replace the last FC layer
+    elif classifier == "resnet18":
+        model_ = models.resnet18(pretrained=True)
+        num_ftrs = model_.fc.in_features
+        model_.fc = nn.Linear(num_ftrs, num_classes)  # replace the last FC layer
         input_size = 224
-        save_string = "resnet_18_ckpt"
+        save_string = "resnet_18"
         epochs = 5
-    elif opts.Classifier == "vgg16":
-        model = models.vgg16(pretrained=True)
-        num_ftrs = model.classifier[6].in_features
-        model.classifier[6] = nn.Linear(num_ftrs, num_classes)  # replace the last FC layer
+    elif classifier == "vgg16":
+        model_ = models.vgg16(pretrained=True)
+        num_ftrs = model_.classifier[6].in_features
+        model_.classifier[6] = nn.Linear(num_ftrs, num_classes)  # replace the last FC layer
         input_size = 224
-        save_string = "vgg_16_ckpt"
+        save_string = "vgg_16"
         epochs = 5
-    elif opts.Classifier == "alexnet":
-        model = models.alexnet(pretrained=True)
-        num_ftrs = model.classifier[6].in_features
-        model.classifier[6] = nn.Linear(num_ftrs, num_classes)  # replace the last FC layer
+    elif classifier == "densenet":
+        model_ = models.densenet121(pretrained=True)
+        num_ftrs = model_.classifier.in_features
+        model_.classifier = nn.Linear(num_ftrs, num_classes)  # replace the last FC layer
         input_size = 224
-        save_string = "alexnet_ckpt"
-        epochs = 5
-    elif opts.Classifier == "densenet":
-        model = models.densenet121(pretrained=True)
-        num_ftrs = model.classifier.in_features
-        model.classifier = nn.Linear(num_ftrs, num_classes)  # replace the last FC layer
-        input_size = 224
-        save_string = "densenet_ckpt"
+        save_string = "densenet"
         epochs = 5
 
-    return model, save_string, input_size, epochs
+    return model_, save_string, input_size, epochs
 
 
 num_classes = 43
+
+if not os.path.isdir('outputs'):
+    os.mkdir('outputs')
 
 device = torch.device(
     "cuda:0" if torch.cuda.is_available() else "cpu")  # use gpu 0 if it is available, o.w. use the cpu
@@ -131,30 +127,51 @@ print("device: ", device)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--TrainTest', type=str, default="Test", help="Train or Test")
-parser.add_argument('--Classifier', type=str, default="Original", help="Original, CifarCNN, resnet18, vgg16, densenet, alexnet")
+parser.add_argument('--Classifier', type=str, default="Original", help="Original, CifarCNN, resnet18, vgg16, densenet")
+parser.add_argument('--Augmentation', type=str, default="No", help="Yes or No")
 parser.add_argument('--root', type=str, help="directory of data folders")
 opts = parser.parse_args()
 
-
+# nets = ['Original', 'CifarCNN', 'resnet18', 'vgg16', 'densenet']
 model, save_string, input_size, epochs = model_choice(opts.Classifier, num_classes)
+
+# for net_curr in range(len(nets)):
+# model, save_string, input_size, epochs = model_choice(nets[net_curr], num_classes)
 model = model.to(device)
 
 mode = opts.TrainTest
+augmentation = opts.Augmentation
 root_train = opts.root + "/Train"
 root_test = opts.root + "/Test_Arranged"
 
-
 batch_size = 32
-transform = transforms.Compose(
+if augmentation == "Yes":
+    save_string = save_string + "_aug"
+    transform_train = transforms.Compose(
+        [
+            transforms.Resize([input_size, input_size]),
+            transforms.RandomAffine(degrees=0, translate=(0.1, 0.1)),
+            transforms.ColorJitter(brightness=0.5, contrast=0, saturation=0, hue=0),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        ])
+elif augmentation == "No":
+    transform_train = transforms.Compose(
+        [
+            transforms.Resize([input_size, input_size]),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        ])
+
+transform_test = transforms.Compose(
     [
         transforms.Resize([input_size, input_size]),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])
 
-
-data = torchvision.datasets.ImageFolder(root=root_train, transform=transform)
-data_test = torchvision.datasets.ImageFolder(root=root_test, transform=transform)
+data = torchvision.datasets.ImageFolder(root=root_train, transform=transform_train)
+data_test = torchvision.datasets.ImageFolder(root=root_test, transform=transform_test)
 
 train_size = int(0.8 * len(data))
 val_size = len(data) - train_size
@@ -163,8 +180,8 @@ train_loader = torch.utils.data.DataLoader(data_train, batch_size=batch_size, sh
 val_loader = torch.utils.data.DataLoader(data_val, batch_size=batch_size, shuffle=True)
 test_loader = torch.utils.data.DataLoader(data_test, batch_size=batch_size, shuffle=True)
 
-if mode == "Train":
 
+if mode == "Train":
     learning_rate = 1e-3
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
@@ -194,6 +211,7 @@ if mode == "Train":
 
         # Normalizing the loss by the total number of train batches
         running_loss /= len(train_loader)
+        loss_memory.append(running_loss)
 
         # Calculate training/test set accuracy of the existing model
         train_accuracy, _ = calculate_accuracy(model, train_loader, device)
@@ -206,7 +224,6 @@ if mode == "Train":
         epoch_time = time.time() - epoch_time
         log += "Epoch Time: {:.2f} secs".format(epoch_time)
         print(log)
-        loss_memory.append(running_loss)
 
         # save model
         if epoch % epochs == 0:
@@ -217,12 +234,22 @@ if mode == "Train":
             }
             if not os.path.isdir('our_checkpoints'):
                 os.mkdir('our_checkpoints')
-            torch.save(state, "./our_checkpoints/" + save_string + ".pth")
+            torch.save(state, "./our_checkpoints/" + save_string + "_ckpt.pth")
+
 
     print('==> Finished Training ...')
 
     test_accuracy, confusion_matrix = calculate_accuracy(model, test_loader, device)
-    print("test accuracy: {:.3f}%".format(test_accuracy))
+    print("test accuracy for model {} is: {:.3f}%".format(opts.Classifier, test_accuracy))
+
+    fig = plt.figure(figsize=(8, 5))  # create a figure, just like in matlab
+    ax = fig.add_subplot(1, 1, 1)  # create a subplot of certain size
+    ax.plot(np.linspace(1, epochs, epochs), loss_memory)
+    ax.set_xlabel('epochs')
+    ax.set_ylabel("Loss")
+    ax.set_title("loss vs epochs for " + opts.Classifier + " Net")
+    plt.savefig("./outputs/loss_graph_" + save_string + ".png")
+
 
     #%% plot the confusion matrix
     fig, ax = plt.subplots(1,1,figsize=(14,10))
@@ -231,7 +258,7 @@ if mode == "Train":
     Normalized_mat = np.round(confusion_matrix/rep_label, 2)
     # ax.matshow(confusion_matrix, aspect='auto', vmin=0, vmax=500, cmap=plt.get_cmap('GnBu'))
     ax.matshow(Normalized_mat, aspect='auto', vmin=0, vmax=2, cmap=plt.get_cmap('GnBu'))
-    
+
 
     ax.set_yticks(np.arange(len(class_names)))
     ax.set_xticks(np.arange(len(class_names)))
@@ -251,15 +278,16 @@ if mode == "Train":
                 #text = ax.text(j, i, confusion_matrix[i, j],
                                ha="center", va="center", color="k")
     fig.tight_layout()
-    plt.show()
-    
+    plt.savefig("./outputs/confusion_matrix_" + save_string + ".png")
+
+
 elif mode == "Test":
-    state = torch.load("./our_checkpoints/" + save_string + ".pth", map_location=device)
+    state = torch.load("./our_checkpoints/" + save_string + "_ckpt.pth", map_location=device)
     model.load_state_dict(state['net'])
 
     test_accuracy, confusion_matrix = calculate_accuracy(model, test_loader, device)
     print("test accuracy: {:.3f}%".format(test_accuracy))
-    
+
     #%% plot the confusion matrix
     fig, ax = plt.subplots(1,1,figsize=(14,10))
     label_num = np.sum(confusion_matrix, axis=1)
@@ -267,7 +295,6 @@ elif mode == "Test":
     Normalized_mat = np.round(confusion_matrix/rep_label, 2)
     # ax.matshow(confusion_matrix, aspect='auto', vmin=0, vmax=500, cmap=plt.get_cmap('GnBu'))
     ax.matshow(Normalized_mat, aspect='auto', vmin=0, vmax=2, cmap=plt.get_cmap('GnBu'))
-    
 
     ax.set_yticks(np.arange(len(class_names)))
     ax.set_xticks(np.arange(len(class_names)))
@@ -287,5 +314,4 @@ elif mode == "Test":
                 #text = ax.text(j, i, confusion_matrix[i, j],
                                ha="center", va="center", color="k")
     fig.tight_layout()
-    plt.show()
-
+    plt.savefig("./outputs/confusion_matrix_" + save_string + ".png")

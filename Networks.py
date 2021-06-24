@@ -11,17 +11,17 @@ class Original_Classifier(torch.nn.Module):
         self.conv_layer = nn.Sequential(
 
             # Conv Layer block 1
-            nn.Conv2d(in_channels=3, out_channels=32, kernel_size=5, padding=1),
+            nn.Conv2d(in_channels=3, out_channels=32, kernel_size=5, padding=0),
             nn.ReLU(inplace=True),
-            nn.Conv2d(in_channels=32, out_channels=32, kernel_size=5, padding=1),
+            nn.Conv2d(in_channels=32, out_channels=32, kernel_size=5, padding=0),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
             nn.Dropout2d(p=0.25),
 
             # Conv Layer block 2
-             nn.Conv2d(in_channels=32, out_channels=64, kernel_size=5, padding=1),
+             nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, padding=0),
             nn.ReLU(inplace=True),
-            nn.Conv2d(in_channels=64, out_channels=64, kernel_size=5, padding=1),
+            nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3, padding=0),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
             nn.Dropout2d(p=0.25)
