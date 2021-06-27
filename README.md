@@ -50,6 +50,9 @@ In order to run the code, use the main.py file, it requires 4 parameters:
 #### run example:
     python main.py --TrainTest "Train" --Classifier "Original" --Augmentation "No" --root "C:\Users\liorb\OneDrive - Technion\Documents\Deep Learning - 046211\project"
 
+## A short presentation of the project
+<a href="https://www.youtube.com/watch?v=3TJz2AGAyIw&ab_channel=%D7%9B%D7%A4%D7%99%D7%A8%D7%9C%D7%95%D7%99"> YouTube presentation </a> 
+
 ## The GTSRB dataset
 we used the GTSRB dataset, which consists of german traffic signs with 43 different classes and more than 39,000 samples of 30x30 RGB images.
 in order to run the code, you need to download the dataset from one of the following sources:
