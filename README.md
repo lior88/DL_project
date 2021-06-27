@@ -1,8 +1,8 @@
-# DL project - Traffic sign recognition
+# DL project - Traffic Sign Recognition
 
 <h1 align="center">
   <br>
-Traffic sign recognition
+Traffic Sign Recognition
   <br>
   <img src="https://github.com/lior88/DL_project/blob/main/source/pic.png" height="200">
 </h1>
@@ -11,7 +11,7 @@ Traffic sign recognition
     <a href="https://github.com/kfirlevi"> Kfir Levi </a> 
   </p>
 
-- [DL project - Traffic sign recognition](#dl-project---traffic-sign-recognition)
+- [DL project - Traffic Sign Recognition](#dl-project---traffic-sign-recognition)
   * [Agenda](#agenda)
   * [Running The Code](#running-the-code)
     + [making the test set](#making-the-test-set)
