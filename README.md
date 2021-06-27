@@ -51,6 +51,7 @@ In order to run the code, use the main.py file, it requires 4 parameters:
     python main.py --TrainTest "Train" --Classifier "Original" --Augmentation "No" --root "C:\Users\liorb\OneDrive - Technion\Documents\Deep Learning - 046211\project"
 
 ## A short presentation of the project
+You can access our presentation of the project via the link:
 <a href="https://www.youtube.com/watch?v=3TJz2AGAyIw&ab_channel=%D7%9B%D7%A4%D7%99%D7%A8%D7%9C%D7%95%D7%99"> YouTube presentation </a> 
 
 ## The GTSRB dataset
