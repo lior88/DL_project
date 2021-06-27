@@ -43,7 +43,6 @@ In order to run the code, use the main.py file, it requires 4 parameters:
   + Original - the original network used for the project.
   + CifarCNN - the Cifar_CNN network we saw in class.
   + resnet18 - the pretrained resnet18 network.
-  + vgg16 - the pretrained vgg16 network.
   + densenet - the pretrained densenet network.
 * Augnemtation - receives a string which specifies whether to use augmentation in the training or not.
 * root - the location of the data folders.
